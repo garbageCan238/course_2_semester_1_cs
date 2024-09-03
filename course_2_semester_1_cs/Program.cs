@@ -1,4 +1,6 @@
-﻿internal class Program
+﻿using System.Collections.Generic;
+
+internal class Program
 {
     class UninterruptivlePowerSupply
     {
@@ -16,7 +18,12 @@
             this.brand = brand;
             this.capacity = capacity;
         }
-    }
+        
+        public virtual void PrintInfo()
+        {
+            Console.WriteLine($"UninterruptivlePowerSupply: manufacturer: {manufacturer}, brand: {brand}, capacity: {capacity}");
+        }
+    } 
 
     private static void Main(string[] args)
     {
