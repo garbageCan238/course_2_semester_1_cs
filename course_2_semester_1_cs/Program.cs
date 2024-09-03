@@ -1,12 +1,8 @@
-﻿using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
-using static System.Collections.Specialized.BitVector32;
+﻿using System.Collections;
+using System.Drawing;
 
 internal class Program
 {
-    [Serializable]
     class UninterruptivlePowerSupply
     {
         public string? manufacturer { get; set; }
@@ -20,7 +16,7 @@ internal class Program
         {
             this.manufacturer = possibleManufacturers[new Random().Next(0, possibleManufacturers.Length)];
             this.brand = possibleBrands[new Random().Next(0, possibleBrands.Length)];
-            this.capacity = new Random().Next(0, 1000);
+            this.capacity = new Random().Next(0, 100_000);
         }
         public virtual void PrintInfo()
         {
@@ -29,7 +25,6 @@ internal class Program
 
     }
 
-    [Serializable]
     class PowerSupplies
     {
         private int _count;
@@ -61,66 +56,143 @@ internal class Program
             set
             {
                 supplies[index] = value;
+
             }
         }
+
+        public void SelectionSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+        {
+            int length = Count;
+            UninterruptivlePowerSupply temp;
+            for (int j = 0; j < length - 1; j++)
+            {
+                int min = j;
+                for (int i = j + 1; i < length; i++)
+                {
+                    if (compare(supplies[min], supplies[i]))
+                    {
+                        min = i;
+                    }
+                }
+                temp = supplies[j];
+                supplies[j] = supplies[min];
+                supplies[min] = temp;
+            }
+        }
+
+        public void BubbleSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+        {
+            UninterruptivlePowerSupply temp;
+            for (int j = 0; j < Count - 1; j++)
+            {
+                for (int i = 0; i < Count - 1; i++)
+                {
+                    if (compare(supplies[i], supplies[i + 1]))
+                    {
+                        temp = supplies[i + 1];
+                        supplies[i + 1] = supplies[i];
+                        supplies[i] = temp;
+                    }
+                }
+            }
+        }
+
+        public void ShakerSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+        {
+            bool isSwapped = true;
+            int start = 0;
+            int end = Count;
+
+            while (isSwapped == true)
+            {
+                isSwapped = false;
+                for (int i = start; i < end - 1; ++i)
+                {
+                    if (compare(supplies[i], supplies[i + 1]))
+                    {
+                        (supplies[i + 1], supplies[i]) = (supplies[i], supplies[i + 1]);
+                        isSwapped = true;
+                    }
+                }
+                if (isSwapped == false)
+                    break;
+                isSwapped = false;
+                end = end - 1;
+                for (int i = end - 1; i >= start; i--)
+                {
+                    if (compare(supplies[i], supplies[i + 1]))
+                    {
+                        (supplies[i + 1], supplies[i]) = (supplies[i], supplies[i + 1]);
+                        isSwapped = true;
+                    }
+                }
+                start = start + 1;
+            }
+        }
+        
+        public void ShellSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+        {
+            for (int interval = Count / 2; interval > 0; interval /= 2)
+            {
+                for (int i = interval; i < Count; i++)
+                {
+                    var currentKey = supplies[i];
+                    var k = i;
+                    while (k >= interval && compare(supplies[k - interval], currentKey))
+                    {
+                        supplies[k] = supplies[k - interval];
+                        k -= interval;
+                    }
+                    supplies[k] = currentKey;
+                }
+            }
+        }
+
     }
 
     private static void Main(string[] args)
     {
-        var singlePowerSupply = new UninterruptivlePowerSupply();
+        var count = 10000;
+        Console.WriteLine($"Sorting {count} power supplies by capasity...");
 
-        var powerSupplies = new PowerSupplies(5);
+        var powerSupplies = new PowerSupplies(count);
         for (int i = 0; i < powerSupplies.Count; i++)
         {
             powerSupplies[i] = new UninterruptivlePowerSupply();
         }
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        powerSupplies.SelectionSort((x, y) => x.capacity > (y.capacity));
+        watch.Stop();
+        Console.WriteLine($"Selection sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
 
-        Console.WriteLine("Single: ");
-        singlePowerSupply.PrintInfo();
-        Console.WriteLine("Container: ");
+        powerSupplies = new PowerSupplies(count);
         for (int i = 0; i < powerSupplies.Count; i++)
         {
-            powerSupplies[i].PrintInfo();
+            powerSupplies[i] = new UninterruptivlePowerSupply();
         }
+        watch = System.Diagnostics.Stopwatch.StartNew();
+        powerSupplies.BubbleSort((x, y) => x.capacity > (y.capacity));
+        watch.Stop();
+        Console.WriteLine($"Bubble sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
 
-        using (var fs = new FileStream("single_power_supply.txt", FileMode.Create, FileAccess.Write))
+        powerSupplies = new PowerSupplies(count);
+        for (int i = 0; i < powerSupplies.Count; i++)
         {
-            JsonSerializer.Serialize(fs, singlePowerSupply);
+            powerSupplies[i] = new UninterruptivlePowerSupply();
         }
+        watch = System.Diagnostics.Stopwatch.StartNew();
+        powerSupplies.ShakerSort((x, y) => x.capacity > (y.capacity));
+        watch.Stop();
+        Console.WriteLine($"Shaker sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
 
-        using (var fs = new FileStream("power_supplies.txt", FileMode.Create, FileAccess.Write))
+        powerSupplies = new PowerSupplies(count);
+        for (int i = 0; i < powerSupplies.Count; i++)
         {
-            JsonSerializer.Serialize(fs, powerSupplies);
+            powerSupplies[i] = new UninterruptivlePowerSupply();
         }
-
-        UninterruptivlePowerSupply? deserializedPowerSupply = null;
-        PowerSupplies? deserializedPowerSupplies = null;
-
-        using (var jsonFileReader = File.OpenText("single_power_supply.txt"))
-        {
-            deserializedPowerSupply = JsonSerializer.Deserialize<UninterruptivlePowerSupply> (jsonFileReader.ReadToEnd(),
-            new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-        }
-
-        using (var jsonFileReader = File.OpenText("power_supplies.txt"))
-        {
-            deserializedPowerSupplies = JsonSerializer.Deserialize<PowerSupplies>(jsonFileReader.ReadToEnd(),
-            new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
-        }
-
-        Console.WriteLine("\nDeserialized single: ");
-        deserializedPowerSupply.PrintInfo();
-        Console.WriteLine("Deserialized container: ");
-        for (int i = 0; i < deserializedPowerSupplies.Count; i++)
-        {
-            deserializedPowerSupplies[i].PrintInfo();
-        }
-
+        watch = System.Diagnostics.Stopwatch.StartNew();
+        powerSupplies.ShellSort((x, y) => x.capacity > (y.capacity));
+        watch.Stop();
+        Console.WriteLine($"Shell sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
     }
 }
