@@ -23,19 +23,29 @@ internal class Program
         {
             Console.WriteLine($"UninterruptivlePowerSupply: manufacturer: {manufacturer}, brand: {brand}, capacity: {capacity}");
         }
-    } 
+    }
+
+    class PowerSupplyForSale : UninterruptivlePowerSupply
+    {
+        public Decimal? price;
+
+        public PowerSupplyForSale(string? manufacturer, string? brand, decimal? capacity, decimal? price) : base(manufacturer, brand, capacity)
+        {
+            this.price = price;
+        }
+
+        public override void PrintInfo()
+        {
+            Console.WriteLine($"PowerSupplyForSale: manufacturer: {manufacturer}, brand: {brand}, capacity: {capacity}, price: {price}");
+        }
+    }
 
     private static void Main(string[] args)
     {
-        var first = new UninterruptivlePowerSupply();
+        var first = new UninterruptivlePowerSupply("Samsung", "Apple", 500);
+        first.PrintInfo();
 
-        first.manufacturer = "Samsung";
-        first.brand = "Apple";
-        first.capacity = (decimal)235.124;
-
-        Console.WriteLine($"first object: manufacturer: {first.manufacturer}, brand: {first.brand}, capacity: {first.capacity}");
-
-        var second = new UninterruptivlePowerSupply("Dell", "Hp", (decimal)6532.128);
-        Console.WriteLine($"second object: manufacturer: {second.manufacturer}, brand: {second.brand}, capacity: {second.capacity}");
+        var second = new PowerSupplyForSale("Dell", "Hp", 300, 5425);
+        second.PrintInfo();
     }
 }
