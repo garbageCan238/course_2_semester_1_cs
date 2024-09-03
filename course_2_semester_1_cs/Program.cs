@@ -22,11 +22,11 @@ internal class Program
             this.brand = possibleBrands[new Random().Next(0, possibleBrands.Length)];
             this.capacity = new Random().Next(0, 1000);
         }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public virtual void PrintInfo()
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"UninterruptivlePowerSupply: manufacturer: {manufacturer}, brand: {brand}, capacity: {capacity}");
         }
+
     }
 
     [Serializable]
@@ -69,10 +69,18 @@ internal class Program
     {
         var singlePowerSupply = new UninterruptivlePowerSupply();
 
-        var powerSupplies = new PowerSupplies(10);
+        var powerSupplies = new PowerSupplies(5);
         for (int i = 0; i < powerSupplies.Count; i++)
         {
             powerSupplies[i] = new UninterruptivlePowerSupply();
+        }
+
+        Console.WriteLine("Single: ");
+        singlePowerSupply.PrintInfo();
+        Console.WriteLine("Container: ");
+        for (int i = 0; i < powerSupplies.Count; i++)
+        {
+            powerSupplies[i].PrintInfo();
         }
 
         using (var fs = new FileStream("single_power_supply.txt", FileMode.Create, FileAccess.Write))
@@ -95,6 +103,23 @@ internal class Program
                 {
                     PropertyNameCaseInsensitive = true
                 });
+        }
+
+        using (var jsonFileReader = File.OpenText("power_supplies.txt"))
+        {
+            deserializedPowerSupplies = JsonSerializer.Deserialize<PowerSupplies>(jsonFileReader.ReadToEnd(),
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        }
+
+        Console.WriteLine("\nDeserialized single: ");
+        deserializedPowerSupply.PrintInfo();
+        Console.WriteLine("Deserialized container: ");
+        for (int i = 0; i < deserializedPowerSupplies.Count; i++)
+        {
+            deserializedPowerSupplies[i].PrintInfo();
         }
 
     }
