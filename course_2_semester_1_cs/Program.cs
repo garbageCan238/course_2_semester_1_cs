@@ -1,9 +1,34 @@
-﻿using course_2_semester_1_cs;
+﻿internal class Program
+{
+    class UninterruptivlePowerSupply
+    {
+        public string? manufacturer;
+        public string? brand;
+        public decimal? capacity;
 
-var powerSupply = new UninterruptivlePowerSupply();
+        public UninterruptivlePowerSupply()
+        {
+        }
 
-powerSupply.manufacturer = "Samsung";
-powerSupply.brand = "Apple";
-powerSupply.capacity = (decimal)235.124;
+        public UninterruptivlePowerSupply(string? manufacturer, string? brand, decimal? capacity)
+        {
+            this.manufacturer = manufacturer;
+            this.brand = brand;
+            this.capacity = capacity;
+        }
+    }
 
-Console.WriteLine($"manufacturer: {powerSupply.manufacturer}, brand: {powerSupply.brand}, capacity: {powerSupply.capacity}");
+    private static void Main(string[] args)
+    {
+        var first = new UninterruptivlePowerSupply();
+
+        first.manufacturer = "Samsung";
+        first.brand = "Apple";
+        first.capacity = (decimal)235.124;
+
+        Console.WriteLine($"first object: manufacturer: {first.manufacturer}, brand: {first.brand}, capacity: {first.capacity}");
+
+        var second = new UninterruptivlePowerSupply("Dell", "Hp", (decimal)6532.128);
+        Console.WriteLine($"second object: manufacturer: {second.manufacturer}, brand: {second.brand}, capacity: {second.capacity}");
+    }
+}
