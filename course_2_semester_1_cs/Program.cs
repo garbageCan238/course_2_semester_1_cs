@@ -4,13 +4,13 @@
     {
         public string? manufacturer;
         public string? brand;
-        public decimal? capacity;
+        public int? capacity;
 
         public UninterruptivlePowerSupply()
         {
         }
 
-        public UninterruptivlePowerSupply(string? manufacturer, string? brand, decimal? capacity)
+        public UninterruptivlePowerSupply(string? manufacturer, string? brand, int? capacity)
         {
             this.manufacturer = manufacturer;
             this.brand = brand;
@@ -24,11 +24,11 @@
 
         first.manufacturer = "Samsung";
         first.brand = "Apple";
-        first.capacity = (decimal)235.124;
+        first.capacity = 500;
 
         Console.WriteLine($"first object: manufacturer: {first.manufacturer}, brand: {first.brand}, capacity: {first.capacity}");
 
-        var second = new UninterruptivlePowerSupply("Dell", "Hp", (decimal)6532.128);
+        var second = new UninterruptivlePowerSupply("Dell", "Hp", 800);
         Console.WriteLine($"second object: manufacturer: {second.manufacturer}, brand: {second.brand}, capacity: {second.capacity}");
     }
 }
