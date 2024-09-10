@@ -3,7 +3,7 @@ using System.Drawing;
 
 internal class Program
 {
-    class UninterruptivlePowerSupply
+    class UninterruptivlePowerSupply : ICloneable
     {
         public string? manufacturer { get; set; }
         public string? brand { get; set; }
@@ -18,11 +18,22 @@ internal class Program
             this.brand = possibleBrands[new Random().Next(0, possibleBrands.Length)];
             this.capacity = new Random().Next(0, 100_000);
         }
+
+        public UninterruptivlePowerSupply(int seed)
+        {
+            this.manufacturer = possibleManufacturers[new Random(seed).Next(0, possibleManufacturers.Length)];
+            this.brand = possibleBrands[new Random(seed).Next(0, possibleBrands.Length)];
+            this.capacity = new Random(seed).Next(0, 100_000);
+        }
         public virtual void PrintInfo()
         {
             Console.WriteLine($"UninterruptivlePowerSupply: manufacturer: {manufacturer}, brand: {brand}, capacity: {capacity}");
         }
 
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 
     class PowerSupplies
@@ -45,6 +56,20 @@ internal class Program
         {
             this.Count = count;
             supplies = new UninterruptivlePowerSupply[count];
+            for (int i = 0; i < count; i++)
+            {
+                supplies[i] = new UninterruptivlePowerSupply();
+            }
+        }
+
+        public PowerSupplies(int count, int seed)
+        {
+            this.Count = count;
+            supplies = new UninterruptivlePowerSupply[count];
+            for (int i = 0; i < count; i++)
+            {
+                supplies[i] = new UninterruptivlePowerSupply(seed + i);
+            }
         }
 
         public UninterruptivlePowerSupply this[int index]
@@ -147,49 +172,45 @@ internal class Program
                 }
             }
         }
-
+        public PowerSupplies Copy()
+        {
+            var copy = new PowerSupplies(Count);
+            for (int i = 0; i < Count; i++)
+            {
+                if (this[i] != null)
+                    copy[i] = (UninterruptivlePowerSupply)this[i].Clone();
+                else
+                    copy[i] = null;
+            }
+            return copy;
+        }
     }
 
     private static void Main(string[] args)
     {
         var count = 10000;
+        var original = new PowerSupplies(count, 1);
         Console.WriteLine($"Sorting {count} power supplies by capasity...");
-
-        var powerSupplies = new PowerSupplies(count);
-        for (int i = 0; i < powerSupplies.Count; i++)
-        {
-            powerSupplies[i] = new UninterruptivlePowerSupply();
-        }
+        
+        var powerSupplies = original.Copy();
         var watch = System.Diagnostics.Stopwatch.StartNew();
         powerSupplies.SelectionSort((x, y) => x.capacity > (y.capacity));
         watch.Stop();
         Console.WriteLine($"Selection sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
-
-        powerSupplies = new PowerSupplies(count);
-        for (int i = 0; i < powerSupplies.Count; i++)
-        {
-            powerSupplies[i] = new UninterruptivlePowerSupply();
-        }
+        
+        powerSupplies = original.Copy();
         watch = System.Diagnostics.Stopwatch.StartNew();
         powerSupplies.BubbleSort((x, y) => x.capacity > (y.capacity));
         watch.Stop();
         Console.WriteLine($"Bubble sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
-
-        powerSupplies = new PowerSupplies(count);
-        for (int i = 0; i < powerSupplies.Count; i++)
-        {
-            powerSupplies[i] = new UninterruptivlePowerSupply();
-        }
+        
+        powerSupplies = original.Copy();
         watch = System.Diagnostics.Stopwatch.StartNew();
         powerSupplies.ShakerSort((x, y) => x.capacity > (y.capacity));
         watch.Stop();
         Console.WriteLine($"Shaker sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
-
-        powerSupplies = new PowerSupplies(count);
-        for (int i = 0; i < powerSupplies.Count; i++)
-        {
-            powerSupplies[i] = new UninterruptivlePowerSupply();
-        }
+        
+        powerSupplies = original.Copy();
         watch = System.Diagnostics.Stopwatch.StartNew();
         powerSupplies.ShellSort((x, y) => x.capacity > (y.capacity));
         watch.Stop();
