@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 using System.Drawing;
 
 internal class Program
@@ -66,9 +67,10 @@ internal class Program
         {
             this.Count = count;
             supplies = new UninterruptivlePowerSupply[count];
+            var random = new Random(seed);
             for (int i = 0; i < count; i++)
             {
-                supplies[i] = new UninterruptivlePowerSupply(seed + i);
+                supplies[i] = new UninterruptivlePowerSupply(random.Next());
             }
         }
 
@@ -172,6 +174,26 @@ internal class Program
                 }
             }
         }
+
+        public long InsertionSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            for (int i = 0; i < Count - 1; i++)
+            {
+                for (int j = i + 1; j > 0; j--)
+                {
+                    if (compare(supplies[j - 1], supplies[j]))
+                    {
+                        (supplies[j], supplies[j - 1]) = (supplies[j - 1], supplies[j]);
+                    }
+                }
+            }
+
+            stopwatch.Stop();
+            return stopwatch.ElapsedMilliseconds;
+        }
         public PowerSupplies Copy()
         {
             var copy = new PowerSupplies(Count);
@@ -191,29 +213,35 @@ internal class Program
         var count = 10000;
         var original = new PowerSupplies(count, 1);
         Console.WriteLine($"Sorting {count} power supplies by capasity...");
-        
+
         var powerSupplies = original.Copy();
-        var watch = System.Diagnostics.Stopwatch.StartNew();
+        var watch = Stopwatch.StartNew();
         powerSupplies.SelectionSort((x, y) => x.capacity > (y.capacity));
         watch.Stop();
         Console.WriteLine($"Selection sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
-        
+
         powerSupplies = original.Copy();
-        watch = System.Diagnostics.Stopwatch.StartNew();
+        watch = Stopwatch.StartNew();
         powerSupplies.BubbleSort((x, y) => x.capacity > (y.capacity));
         watch.Stop();
         Console.WriteLine($"Bubble sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
-        
+
         powerSupplies = original.Copy();
-        watch = System.Diagnostics.Stopwatch.StartNew();
+        watch = Stopwatch.StartNew();
         powerSupplies.ShakerSort((x, y) => x.capacity > (y.capacity));
         watch.Stop();
         Console.WriteLine($"Shaker sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
-        
+
         powerSupplies = original.Copy();
-        watch = System.Diagnostics.Stopwatch.StartNew();
+        watch = Stopwatch.StartNew();
         powerSupplies.ShellSort((x, y) => x.capacity > (y.capacity));
         watch.Stop();
         Console.WriteLine($"Shell sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
+
+        powerSupplies = original.Copy();
+        watch = Stopwatch.StartNew();
+        powerSupplies.InsertionSort((x, y) => x.capacity > (y.capacity));
+        watch.Stop();
+        Console.WriteLine($"Insertion sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
     }
 }
