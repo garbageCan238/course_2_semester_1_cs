@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
 
@@ -40,6 +41,18 @@ internal class Program
     class PowerSupplies
     {
         private int _count;
+
+        public Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> CurrentMethod;
+
+        public readonly Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> byManufacturer =
+    (x, y) => x.manufacturer.CompareTo(y.manufacturer) > 0;
+        public readonly Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> byBrand =
+            (x, y) => x.brand.CompareTo(y.brand) > 0;
+        public readonly Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> byCapacity =
+            (x, y) => x.capacity > (y.capacity);
+
+        private PowerSupplies powerSupplies;
+
         public int Count
         {
             get
@@ -84,6 +97,14 @@ internal class Program
             {
                 supplies[index] = value;
 
+            }
+        }
+
+        public void PrintArray()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                supplies[i].PrintInfo();
             }
         }
 
@@ -197,6 +218,7 @@ internal class Program
         public PowerSupplies Copy()
         {
             var copy = new PowerSupplies(Count);
+            copy.CurrentMethod = CurrentMethod;
             for (int i = 0; i < Count; i++)
             {
                 if (this[i] != null)
@@ -210,38 +232,63 @@ internal class Program
 
     private static void Main(string[] args)
     {
-        var count = 10000;
-        var original = new PowerSupplies(count, 1);
-        Console.WriteLine($"Sorting {count} power supplies by capasity...");
+        var count = 100;
+        var original = new PowerSupplies(count);
 
+        Console.WriteLine("Введите поле, по которому вы хотите сортировать массив. 1 - По изготовителю, 2 - По бренду, 3 - По вместимости.");
+        switch (Console.ReadLine())
+        {
+            case "1":
+                original.CurrentMethod = original.byManufacturer;
+                break;
+            case "2":
+                original.CurrentMethod = original.byBrand;
+                break;
+            case "3":
+                original.CurrentMethod = original.byCapacity;
+                break;
+            default:
+                Console.WriteLine("Введите 1, 2 или 3");
+                return;
+        }
+        original.PrintArray();
+
+
+        Console.WriteLine($"Sorting {count} power supplies");
         var powerSupplies = original.Copy();
         var watch = Stopwatch.StartNew();
-        powerSupplies.SelectionSort((x, y) => x.capacity > (y.capacity));
+        powerSupplies.SelectionSort(powerSupplies.CurrentMethod);
         watch.Stop();
         Console.WriteLine($"Selection sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
+        powerSupplies.PrintArray();
 
         powerSupplies = original.Copy();
         watch = Stopwatch.StartNew();
-        powerSupplies.BubbleSort((x, y) => x.capacity > (y.capacity));
+        powerSupplies.BubbleSort(powerSupplies.CurrentMethod);
         watch.Stop();
         Console.WriteLine($"Bubble sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
+        powerSupplies.PrintArray();
 
         powerSupplies = original.Copy();
         watch = Stopwatch.StartNew();
-        powerSupplies.ShakerSort((x, y) => x.capacity > (y.capacity));
+        powerSupplies.ShakerSort(powerSupplies.CurrentMethod);
         watch.Stop();
         Console.WriteLine($"Shaker sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
+        powerSupplies.PrintArray();
 
         powerSupplies = original.Copy();
         watch = Stopwatch.StartNew();
-        powerSupplies.ShellSort((x, y) => x.capacity > (y.capacity));
+        powerSupplies.ShellSort(powerSupplies.CurrentMethod);
         watch.Stop();
         Console.WriteLine($"Shell sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
+        powerSupplies.PrintArray();
 
         powerSupplies = original.Copy();
         watch = Stopwatch.StartNew();
-        powerSupplies.InsertionSort((x, y) => x.capacity > (y.capacity));
+        powerSupplies.InsertionSort(powerSupplies.CurrentMethod);
         watch.Stop();
         Console.WriteLine($"Insertion sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
+        powerSupplies.PrintArray();
+
     }
 }
