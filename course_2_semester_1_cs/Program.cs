@@ -29,7 +29,7 @@ internal class Program
         }
         public virtual void PrintInfo()
         {
-            Console.WriteLine($"UninterruptivlePowerSupply: manufacturer: {manufacturer}, brand: {brand}, capacity: {capacity}");
+            Console.WriteLine($"manufacturer: {manufacturer}, brand: {brand}, capacity: {capacity}");
         }
 
         public object Clone()
@@ -259,35 +259,35 @@ internal class Program
         var watch = Stopwatch.StartNew();
         powerSupplies.SelectionSort(powerSupplies.CurrentMethod);
         watch.Stop();
-        Console.WriteLine($"Selection sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
+        Console.WriteLine($"Selection sort, time elapsed in ticks: {watch.ElapsedTicks}");
         powerSupplies.PrintArray();
 
         powerSupplies = original.Copy();
         watch = Stopwatch.StartNew();
         powerSupplies.BubbleSort(powerSupplies.CurrentMethod);
         watch.Stop();
-        Console.WriteLine($"Bubble sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
+        Console.WriteLine($"Bubble sort, time elapsed in ticks: {watch.ElapsedTicks}");
         powerSupplies.PrintArray();
 
         powerSupplies = original.Copy();
         watch = Stopwatch.StartNew();
         powerSupplies.ShakerSort(powerSupplies.CurrentMethod);
         watch.Stop();
-        Console.WriteLine($"Shaker sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
+        Console.WriteLine($"Shaker sort, time elapsed in ticks: {watch.ElapsedTicks}");
         powerSupplies.PrintArray();
 
         powerSupplies = original.Copy();
         watch = Stopwatch.StartNew();
         powerSupplies.ShellSort(powerSupplies.CurrentMethod);
         watch.Stop();
-        Console.WriteLine($"Shell sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
+        Console.WriteLine($"Shell sort, time elapsed in ticks: {watch.ElapsedTicks}");
         powerSupplies.PrintArray();
 
         powerSupplies = original.Copy();
         watch = Stopwatch.StartNew();
         powerSupplies.InsertionSort(powerSupplies.CurrentMethod);
         watch.Stop();
-        Console.WriteLine($"Insertion sort, time elapsed in milisecond: {watch.ElapsedMilliseconds}");
+        Console.WriteLine($"Insertion sort, time elapsed in ticks: {watch.ElapsedTicks}");
         powerSupplies.PrintArray();
 
     }
