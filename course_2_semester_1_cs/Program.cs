@@ -5,7 +5,7 @@ using System.Drawing;
 
 internal class Program
 {
-    class UninterruptivlePowerSupply : ICloneable
+    class UninterruptiblePowerSupply : ICloneable
     {
         public string? manufacturer { get; set; }
         public string? brand { get; set; }
@@ -14,14 +14,14 @@ internal class Program
         protected string[] possibleManufacturers = ["Apple", "Samsung", "Hp", "Dell", "Xiaomi", "Huawei", "Techno", "Google", "OnePlus", "Alcatel", "Asus", "Lenovo", "Vivo"];
         protected string[] possibleBrands = ["S1", "S2", "S3", "Redmi", "Nova", "Spark", "A60", "Go", "K15", "Galaxy", "15", "13", "B256"];
 
-        public UninterruptivlePowerSupply()
+        public UninterruptiblePowerSupply()
         {
             this.manufacturer = possibleManufacturers[new Random().Next(0, possibleManufacturers.Length)];
             this.brand = possibleBrands[new Random().Next(0, possibleBrands.Length)];
             this.capacity = new Random().Next(0, 100_000);
         }
 
-        public UninterruptivlePowerSupply(int seed)
+        public UninterruptiblePowerSupply(int seed)
         {
             this.manufacturer = possibleManufacturers[new Random(seed).Next(0, possibleManufacturers.Length)];
             this.brand = possibleBrands[new Random(seed).Next(0, possibleBrands.Length)];
@@ -42,13 +42,13 @@ internal class Program
     {
         private int _count;
 
-        public Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> CurrentMethod;
+        public Func<UninterruptiblePowerSupply, UninterruptiblePowerSupply, bool> CurrentMethod;
 
-        public readonly Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> byManufacturer =
+        public readonly Func<UninterruptiblePowerSupply, UninterruptiblePowerSupply, bool> byManufacturer =
     (x, y) => x.manufacturer.CompareTo(y.manufacturer) > 0;
-        public readonly Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> byBrand =
+        public readonly Func<UninterruptiblePowerSupply, UninterruptiblePowerSupply, bool> byBrand =
             (x, y) => x.brand.CompareTo(y.brand) > 0;
-        public readonly Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> byCapacity =
+        public readonly Func<UninterruptiblePowerSupply, UninterruptiblePowerSupply, bool> byCapacity =
             (x, y) => x.capacity > (y.capacity);
 
         private PowerSupplies powerSupplies;
@@ -64,30 +64,30 @@ internal class Program
                 _count = value;
             }
         }
-        public UninterruptivlePowerSupply[] supplies { get; set; }
+        public UninterruptiblePowerSupply[] supplies { get; set; }
 
         public PowerSupplies(int count)
         {
             this.Count = count;
-            supplies = new UninterruptivlePowerSupply[count];
+            supplies = new UninterruptiblePowerSupply[count];
             for (int i = 0; i < count; i++)
             {
-                supplies[i] = new UninterruptivlePowerSupply();
+                supplies[i] = new UninterruptiblePowerSupply();
             }
         }
 
         public PowerSupplies(int count, int seed)
         {
             this.Count = count;
-            supplies = new UninterruptivlePowerSupply[count];
+            supplies = new UninterruptiblePowerSupply[count];
             var random = new Random(seed);
             for (int i = 0; i < count; i++)
             {
-                supplies[i] = new UninterruptivlePowerSupply(random.Next());
+                supplies[i] = new UninterruptiblePowerSupply(random.Next());
             }
         }
 
-        public UninterruptivlePowerSupply this[int index]
+        public UninterruptiblePowerSupply this[int index]
         {
             get
             {
@@ -108,10 +108,10 @@ internal class Program
             }
         }
 
-        public void SelectionSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+        public void SelectionSort(Func<UninterruptiblePowerSupply, UninterruptiblePowerSupply, bool> compare)
         {
             int length = Count;
-            UninterruptivlePowerSupply temp;
+            UninterruptiblePowerSupply temp;
             for (int j = 0; j < length - 1; j++)
             {
                 int min = j;
@@ -128,9 +128,9 @@ internal class Program
             }
         }
 
-        public void BubbleSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+        public void BubbleSort(Func<UninterruptiblePowerSupply, UninterruptiblePowerSupply, bool> compare)
         {
-            UninterruptivlePowerSupply temp;
+            UninterruptiblePowerSupply temp;
             for (int j = 0; j < Count - 1; j++)
             {
                 for (int i = 0; i < Count - 1; i++)
@@ -145,7 +145,7 @@ internal class Program
             }
         }
 
-        public void ShakerSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+        public void ShakerSort(Func<UninterruptiblePowerSupply, UninterruptiblePowerSupply, bool> compare)
         {
             bool isSwapped = true;
             int start = 0;
@@ -178,7 +178,7 @@ internal class Program
             }
         }
         
-        public void ShellSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+        public void ShellSort(Func<UninterruptiblePowerSupply, UninterruptiblePowerSupply, bool> compare)
         {
             for (int interval = Count / 2; interval > 0; interval /= 2)
             {
@@ -196,7 +196,7 @@ internal class Program
             }
         }
 
-        public long InsertionSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+        public long InsertionSort(Func<UninterruptiblePowerSupply, UninterruptiblePowerSupply, bool> compare)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -222,7 +222,7 @@ internal class Program
             for (int i = 0; i < Count; i++)
             {
                 if (this[i] != null)
-                    copy[i] = (UninterruptivlePowerSupply)this[i].Clone();
+                    copy[i] = (UninterruptiblePowerSupply)this[i].Clone();
                 else
                     copy[i] = null;
             }
