@@ -6,10 +6,13 @@
         public string? brand;
         public int? capacity;
 
+        protected string[] possibleManufacturers = ["Apple", "Samsung", "Hp", "Dell", "Xiaomi", "Huawei", "Techno", "Google", "OnePlus", "Alcatel", "Asus", "Lenovo", "Vivo"];
+        protected string[] possibleBrands = ["S1", "S2", "S3", "Redmi", "Nova", "Spark", "A60", "Go", "K15", "Galaxy", "15", "13", "B256"];
+
         public UninterruptivlePowerSupply()
         {
-            this.manufacturer = new Random().NextDouble().ToString();
-            this.brand = new Random().NextDouble().ToString();
+            this.manufacturer = possibleManufacturers[new Random().Next(0, possibleManufacturers.Length)];
+            this.brand = possibleBrands[new Random().Next(0, possibleBrands.Length)];
             this.capacity = new Random().Next(0, 1000);
         }
     }
