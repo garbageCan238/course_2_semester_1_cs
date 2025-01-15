@@ -232,7 +232,7 @@ internal class Program
 
     private static void Main(string[] args)
     {
-        var count = 100;
+        var count = 10000;
         var original = new PowerSupplies(count);
 
         Console.WriteLine("Введите поле, по которому вы хотите сортировать массив. 1 - По изготовителю, 2 - По бренду, 3 - По вместимости.");
@@ -251,44 +251,68 @@ internal class Program
                 Console.WriteLine("Введите 1, 2 или 3");
                 return;
         }
-        original.PrintArray();
 
+        Console.WriteLine($"Sorting {count} objects\nComparison of sorting methods:");
 
-        Console.WriteLine($"Sorting {count} power supplies");
         var powerSupplies = original.Copy();
         var watch = Stopwatch.StartNew();
         powerSupplies.SelectionSort(powerSupplies.CurrentMethod);
         watch.Stop();
-        Console.WriteLine($"Selection sort, time elapsed in ticks: {watch.ElapsedTicks}");
-        powerSupplies.PrintArray();
+        Console.WriteLine($"Selection sort, time elapsed in milliseconds: {watch.ElapsedMilliseconds}");
 
         powerSupplies = original.Copy();
         watch = Stopwatch.StartNew();
         powerSupplies.BubbleSort(powerSupplies.CurrentMethod);
         watch.Stop();
-        Console.WriteLine($"Bubble sort, time elapsed in ticks: {watch.ElapsedTicks}");
-        powerSupplies.PrintArray();
+        Console.WriteLine($"Bubble sort, time elapsed in milliseconds: {watch.ElapsedMilliseconds}");
 
         powerSupplies = original.Copy();
         watch = Stopwatch.StartNew();
         powerSupplies.ShakerSort(powerSupplies.CurrentMethod);
         watch.Stop();
-        Console.WriteLine($"Shaker sort, time elapsed in ticks: {watch.ElapsedTicks}");
-        powerSupplies.PrintArray();
+        Console.WriteLine($"Shaker sort, time elapsed in milliseconds: {watch.ElapsedMilliseconds}");
 
         powerSupplies = original.Copy();
         watch = Stopwatch.StartNew();
         powerSupplies.ShellSort(powerSupplies.CurrentMethod);
         watch.Stop();
-        Console.WriteLine($"Shell sort, time elapsed in ticks: {watch.ElapsedTicks}");
-        powerSupplies.PrintArray();
+        Console.WriteLine($"Shell sort, time elapsed in milliseconds: {watch.ElapsedMilliseconds}");
 
         powerSupplies = original.Copy();
         watch = Stopwatch.StartNew();
         powerSupplies.InsertionSort(powerSupplies.CurrentMethod);
         watch.Stop();
-        Console.WriteLine($"Insertion sort, time elapsed in ticks: {watch.ElapsedTicks}");
+        Console.WriteLine($"Insertion sort, time elapsed in milliseconds: {watch.ElapsedMilliseconds}");
+
+        Console.WriteLine($"Sorting example:");
+        count = 5;
+        var copiedMethod = original.CurrentMethod;
+        original = new PowerSupplies(count);
+        original.CurrentMethod = copiedMethod;
+
+        powerSupplies = original.Copy();
+        powerSupplies.SelectionSort(powerSupplies.CurrentMethod);
+        Console.WriteLine($"Selection sort");
         powerSupplies.PrintArray();
 
+        powerSupplies = original.Copy();
+        powerSupplies.BubbleSort(powerSupplies.CurrentMethod);
+        Console.WriteLine($"Bubble sort");
+        powerSupplies.PrintArray();
+
+        powerSupplies = original.Copy();
+        powerSupplies.ShakerSort(powerSupplies.CurrentMethod);
+        Console.WriteLine($"Shaker sort");
+        powerSupplies.PrintArray();
+
+        powerSupplies = original.Copy();
+        powerSupplies.ShellSort(powerSupplies.CurrentMethod);
+        Console.WriteLine($"Shell sort");
+        powerSupplies.PrintArray();
+
+        powerSupplies = original.Copy();
+        powerSupplies.InsertionSort(powerSupplies.CurrentMethod);
+        Console.WriteLine($"Insertion sort");
+        powerSupplies.PrintArray();
     }
 }
